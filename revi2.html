@@ -15,43 +15,17 @@
 
         <!-- Créer les noeuds -->
         <a-entity id="nodes">
-            <a-sphere id="node1" color="#ff0000" position="0 0 -5" radius="0.5" dragndrop></a-sphere>
-            <a-sphere id="node2" color="#00ff00" position="2 0 -5" radius="0.5" dragndrop></a-sphere>
-            <a-sphere id="node3" color="#0000ff" position="-2 0 -5" radius="0.5" dragndrop></a-sphere>
-            <a-sphere id="node4" color="#ffff00" position="0 2 -5" radius="0.5" dragndrop></a-sphere>
-            <a-sphere id="node5" color="#ff00ff" position="0 -2 -5" radius="0.5" dragndrop></a-sphere>
-            <a-sphere id="node6" color="#00ffff" position="2 2 -5" radius="0.5" dragndrop></a-sphere>
+            <a-sphere id="node1" color="#ff0000" position="0 0 -5" radius="0.5" grabbable></a-sphere>
+            <a-sphere id="node2" color="#00ff00" position="2 0 -5" radius="0.5" grabbable></a-sphere>
+            <a-sphere id="node3" color="#0000ff" position="-2 0 -5" radius="0.5" grabbable></a-sphere>
+            <a-sphere id="node4" color="#ffff00" position="0 2 -5" radius="0.5" grabbable></a-sphere>
+            <a-sphere id="node5" color="#ff00ff" position="0 -2 -5" radius="0.5" grabbable></a-sphere>
+            <a-sphere id="node6" color="#00ffff" position="2 2 -5" radius="0.5" grabbable></a-sphere>
         </a-entity>
 
         <a-entity id="controller" laser-controls="hand: right"></a-entity>
 
         <script>
-            AFRAME.registerComponent('dragndrop', {
-                init: function () {
-                    var el = this.el;
-                    var startPos;
-                    var startObjectPos;
-
-                    el.addEventListener('mousedown', function (event) {
-                        startPos = event.detail.intersection.point;
-                        startObjectPos = el.object3D.position.clone();
-                        el.sceneEl.canvas.addEventListener('mousemove', drag);
-                        el.sceneEl.canvas.addEventListener('mouseup', release);
-                    });
-
-                    function drag(event) {
-                        var intersectedPos = event.detail.intersection.point;
-                        var deltaPos = intersectedPos.clone().sub(startPos);
-                        el.object3D.position.copy(startObjectPos.clone().add(deltaPos));
-                    }
-
-                    function release() {
-                        el.sceneEl.canvas.removeEventListener('mousemove', drag);
-                        el.sceneEl.canvas.removeEventListener('mouseup', release);
-                    }
-                }
-            });
-
             AFRAME.registerComponent('laser-intersection', {
                 tick: function () {
                     var el = this.el;
