@@ -3,39 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Graphique VR avec Déplacement de Noeuds</title>
+    <title>Graphique VR Sphérique</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
 </head>
 <body>
     <a-scene keyboard-shortcuts="enterVREnabled: false">
         <a-assets></a-assets>
         <a-camera position="0 1.6 0"></a-camera>
-
+        
         <a-sky color="#ECECEC"></a-sky>
-
-        <!-- Créer les noeuds -->
-        <a-entity id="nodes">
-            <a-sphere id="node1" color="#ff0000" position="0 0 -5" radius="0.5" grabbable></a-sphere>
-            <a-sphere id="node2" color="#00ff00" position="2 0 -5" radius="0.5" grabbable></a-sphere>
-            <a-sphere id="node3" color="#0000ff" position="-2 0 -5" radius="0.5" grabbable></a-sphere>
-            <a-sphere id="node4" color="#ffff00" position="0 2 -5" radius="0.5" grabbable></a-sphere>
-            <a-sphere id="node5" color="#ff00ff" position="0 -2 -5" radius="0.5" grabbable></a-sphere>
-            <a-sphere id="node6" color="#00ffff" position="2 2 -5" radius="0.5" grabbable></a-sphere>
+        
+        <!-- Graphe sphérique -->
+        <a-entity id="graph" position="0 1 -3" grabbable>
+            <!-- Noeuds -->
+            <a-sphere color="#ff0000" position="0 1 0" radius="0.1"></a-sphere>
+            <a-sphere color="#00ff00" position="0.5 0.5 0" radius="0.1"></a-sphere>
+            <a-sphere color="#0000ff" position="1 0 0" radius="0.1"></a-sphere>
+            <a-sphere color="#ffff00" position="0.5 -0.5 0" radius="0.1"></a-sphere>
+            <a-sphere color="#ff00ff" position="0 -1 0" radius="0.1"></a-sphere>
+            <a-sphere color="#00ffff" position="-0.5 -0.5 0" radius="0.1"></a-sphere>
+            <a-sphere color="#ff9900" position="-1 0 0" radius="0.1"></a-sphere>
+            <a-sphere color="#99ff00" position="-0.5 0.5 0" radius="0.1"></a-sphere>
+            
+            <!-- Arêtes -->
+            <a-entity line="start: 0 1 0; end: 0.5 0.5 0; color: white"></a-entity>
+            <a-entity line="start: 0.5 0.5 0; end: 1 0 0; color: white"></a-entity>
+            <a-entity line="start: 1 0 0; end: 0.5 -0.5 0; color: white"></a-entity>
+            <a-entity line="start: 0.5 -0.5 0; end: 0 -1 0; color: white"></a-entity>
+            <a-entity line="start: 0 -1 0; end: -0.5 -0.5 0; color: white"></a-entity>
+            <a-entity line="start: -0.5 -0.5 0; end: -1 0 0; color: white"></a-entity>
+            <a-entity line="start: -1 0 0; end: -0.5 0.5 0; color: white"></a-entity>
+            <a-entity line="start: -0.5 0.5 0; end: 0 1 0; color: white"></a-entity>
         </a-entity>
 
-        <a-entity id="controller" laser-controls="hand: right"></a-entity>
-
-        <script>
-            AFRAME.registerComponent('laser-intersection', {
-                tick: function () {
-                    var el = this.el;
-                    var intersection = el.components['tracked-controls'].intersection;
-                    if (!intersection) { return; }
-                    if (!intersection.point) { return; }
-                    el.setAttribute('position', intersection.point);
-                }
-            });
-        </script>
+        <!-- Contrôleurs VR -->
+        <a-entity laser-controls="hand: left" raycaster="objects: .grabbable"></a-entity>
+        <a-entity laser-controls="hand: right" raycaster="objects: .grabbable"></a-entity>
     </a-scene>
+
+    <script>
+        AFRAME.registerComponent('grabbable', {
+            schema: {
+                enabled: { default: true }
+            },
+            init: function() {
+                this.grabbing = false;
+                this.el.addEventListener('mousedown', this.startGrab.bind(this));
+                this.el.addEventListener('mouseup', this.stopGrab.bind(this));
+            },
+            startGrab: function(evt) {
+                if (this.data.enabled) {
+                    this.grabbing = true;
+                    this.grabbedObject = evt.detail.target;
+                    this.grabbedObject.setAttribute('animation', 'property: position; to: 0 0 -2; dur: 500');
+                }
+            },
+            stopGrab: function() {
+                if (this.grabbing) {
+                    this.grabbing = false;
+                    this.grabbedObject.removeAttribute('animation');
+                    this.grabbedObject = null;
+                }
+            }
+        });
+    </script>
 </body>
 </html>
