@@ -3,28 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Graphique VR Sphérique</title>
+    <title>Graphique VR Sphérique avec Interaction</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-physics-system@4.0.1/dist/aframe-physics-system.min.js"></script>
 </head>
 <body>
-    <a-scene keyboard-shortcuts="enterVREnabled: false">
+    <a-scene physics="gravity: 0 -9.8 0">
         <a-assets></a-assets>
-        <a-camera position="0 1.6 0"></a-camera>
         
         <a-sky color="#ECECEC"></a-sky>
         
-        <!-- Graphe sphérique -->
-        <a-entity id="graph" position="0 1 -3" grabbable>
+        <!-- Caméra et contrôles -->
+        <a-entity id="cameraRig" position="0 1.6 0">
+            <a-entity camera look-controls wasd-controls>
+                <a-entity position="0 0 -0.5" geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03" material="color: black; shader: flat"></a-entity>
+            </a-entity>
+            <a-entity laser-controls="hand: left" raycaster="objects: .grabbable"></a-entity>
+            <a-entity laser-controls="hand: right" raycaster="objects: .grabbable"></a-entity>
+        </a-entity>
+        
+        <!-- Graphique sphérique -->
+        <a-entity id="graph" position="0 1 -3" grabbable dynamic-body>
             <!-- Noeuds -->
-            <a-sphere color="#ff0000" position="0 1 0" radius="0.1"></a-sphere>
-            <a-sphere color="#00ff00" position="0.5 0.5 0" radius="0.1"></a-sphere>
-            <a-sphere color="#0000ff" position="1 0 0" radius="0.1"></a-sphere>
-            <a-sphere color="#ffff00" position="0.5 -0.5 0" radius="0.1"></a-sphere>
-            <a-sphere color="#ff00ff" position="0 -1 0" radius="0.1"></a-sphere>
-            <a-sphere color="#00ffff" position="-0.5 -0.5 0" radius="0.1"></a-sphere>
-            <a-sphere color="#ff9900" position="-1 0 0" radius="0.1"></a-sphere>
-            <a-sphere color="#99ff00" position="-0.5 0.5 0" radius="0.1"></a-sphere>
+            <a-sphere color="#ff0000" position="0 1 0" radius="0.1" class="grabbable"></a-sphere>
+            <a-sphere color="#00ff00" position="0.5 0.5 0" radius="0.1" class="grabbable"></a-sphere>
+            <a-sphere color="#0000ff" position="1 0 0" radius="0.1" class="grabbable"></a-sphere>
+            <a-sphere color="#ffff00" position="0.5 -0.5 0" radius="0.1" class="grabbable"></a-sphere>
+            <a-sphere color="#ff00ff" position="0 -1 0" radius="0.1" class="grabbable"></a-sphere>
+            <a-sphere color="#00ffff" position="-0.5 -0.5 0" radius="0.1" class="grabbable"></a-sphere>
+            <a-sphere color="#ff9900" position="-1 0 0" radius="0.1" class="grabbable"></a-sphere>
+            <a-sphere color="#99ff00" position="-0.5 0.5 0" radius="0.1" class="grabbable"></a-sphere>
             
             <!-- Arêtes -->
             <a-entity line="start: 0 1 0; end: 0.5 0.5 0; color: white"></a-entity>
@@ -36,34 +45,34 @@
             <a-entity line="start: -1 0 0; end: -0.5 0.5 0; color: white"></a-entity>
             <a-entity line="start: -0.5 0.5 0; end: 0 1 0; color: white"></a-entity>
         </a-entity>
-
-        <!-- Contrôleurs VR -->
-        <a-entity laser-controls="hand: left" raycaster="objects: .grabbable"></a-entity>
-        <a-entity laser-controls="hand: right" raycaster="objects: .grabbable"></a-entity>
     </a-scene>
 
     <script>
         AFRAME.registerComponent('grabbable', {
-            schema: {
-                enabled: { default: true }
-            },
             init: function() {
-                this.grabbing = false;
-                this.el.addEventListener('mousedown', this.startGrab.bind(this));
-                this.el.addEventListener('mouseup', this.stopGrab.bind(this));
+                var el = this.el;
+                var scene = el.sceneEl;
+                el.setAttribute('grab-start-events', 'gripdown');
+                el.setAttribute('grab-end-events', 'gripup');
+                el.setAttribute('dragndrop', '');
+
+                this.startGrab = this.startGrab.bind(this);
+                this.endGrab = this.endGrab.bind(this);
+
+                scene.addEventListener('gripdown', this.startGrab);
+                scene.addEventListener('gripup', this.endGrab);
             },
             startGrab: function(evt) {
-                if (this.data.enabled) {
-                    this.grabbing = true;
-                    this.grabbedObject = evt.detail.target;
-                    this.grabbedObject.setAttribute('animation', 'property: position; to: 0 0 -2; dur: 500');
+                var el = evt.target;
+                if (el.classList.contains('grabbable')) {
+                    el.setAttribute('dynamic-body', '');
+                    this.grabbed = el;
                 }
             },
-            stopGrab: function() {
-                if (this.grabbing) {
-                    this.grabbing = false;
-                    this.grabbedObject.removeAttribute('animation');
-                    this.grabbedObject = null;
+            endGrab: function() {
+                if (this.grabbed) {
+                    this.grabbed.removeAttribute('dynamic-body');
+                    this.grabbed = null;
                 }
             }
         });
