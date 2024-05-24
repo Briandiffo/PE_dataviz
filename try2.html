@@ -1,19 +1,19 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title></title>
-        <script src="https://aframe.io/release/0.7.1/aframe.min.js"></script>
-        <script src="https://unpkg.com/aframe-event-set-component@3.0.3/dist/aframe-event-set-component.min.js"></script>
-        <script src="https://unpkg.com/super-hands@2.1.0/dist/super-hand.min.js"></script>
-    </head>
-    <body>
-        <a-scene>
-            <a-entity>progressive-controls</a-entity>
-            <a-box color="#AA0000" position="-1.5 0 -7"></a-box>
-            <a-box id="green" color="#00AA00" position="-1.5 3 -7"></a-box>
-            <a-box color="#FFAA00" position="1.5 3 7"></a-box>
-            <a-box id="blue" color="#00AAFF" position="1.5 0 -7"></a-box>
-        </a-scene>
-    </body>
-</html>
+<head>
+  <title>Most Basic Super-Hands Example</title>
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.misc.min.js"></script>
+  <script src="https://unpkg.com/super-hands@^3.0.3/dist/super-hands.min.js"></script>
+</head>
 
+<body>
+  <a-scene>
+    <a-assets></a-assets>
+    <a-entity>
+      <a-camera></a-camera>
+      <a-entity sphere-collider="objects: a-box" super-hands hand-controls="hand: left"></a-entity>
+      <a-entity sphere-collider="objects: a-box" super-hands hand-controls="hand: right"></a-entity>
+    </a-entity>
+    <!-- hover & drag-drop won't have any obvious effect without some additional event handlers or components. See the examples page for more -->
+    <a-box hoverable grabbable stretchable draggable droppable color="blue" position="0 0 -1"></a-box>
+  </a-scene>
+</body>
