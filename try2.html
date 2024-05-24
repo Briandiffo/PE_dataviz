@@ -16,50 +16,9 @@
     </a-entity>
 
     <!-- Quatre sphères contrôlables avec les mains -->
-    <a-sphere id="sphere1" hoverable grabbable stretchable draggable droppable color="red" position="-1 1 -3" radius="0.25"></a-sphere>
-    <a-sphere id="sphere2" hoverable grabbable stretchable draggable droppable color="green" position="1 1 -3" radius="0.25"></a-sphere>
-    <a-sphere id="sphere3" hoverable grabbable stretchable draggable droppable color="blue" position="-1 -1 -3" radius="0.25"></a-sphere>
-    <a-sphere id="sphere4" hoverable grabbable stretchable draggable droppable color="yellow" position="1 -1 -3" radius="0.25"></a-sphere>
-
-    <!-- Déclencheur de mouvement -->
-    <a-entity id="trigger" laser-controls="hand: right"></a-entity>
+    <a-sphere hoverable grabbable stretchable draggable droppable color="red" position="-1 1 -3" radius="0.25"></a-sphere>
+    <a-sphere hoverable grabbable stretchable draggable droppable color="green" position="1 1 -3" radius="0.25"></a-sphere>
+    <a-sphere hoverable grabbable stretchable draggable droppable color="blue" position="-1 -1 -3" radius="0.25"></a-sphere>
+    <a-sphere hoverable grabbable stretchable draggable droppable color="yellow" position="1 -1 -3" radius="0.25"></a-sphere>
   </a-scene>
-
-  <script>
-    AFRAME.registerComponent('trigger-move', {
-      init: function() {
-        const el = this.el;
-        const trigger = document.getElementById('trigger');
-
-        trigger.addEventListener('triggerdown', function() {
-          // Lorsque la touche 'X' est enfoncée, obtenir la cible du rayon
-          const intersection = el.components.raycaster.getIntersection();
-          if (intersection && intersection.object) {
-            // Déplacer l'objet intersecté à la position du rayon
-            intersection.object.setAttribute('position', intersection.point);
-          }
-        });
-      }
-    });
-
-    AFRAME.registerComponent('intersect-listener', {
-      init: function() {
-        const el = this.el;
-
-        el.addEventListener('raycaster-intersection', function(event) {
-          // Ajouter le composant 'trigger-move' au rayon lorsqu'il rencontre un objet
-          event.detail.els.forEach(function(intersectedEl) {
-            intersectedEl.setAttribute('trigger-move', '');
-          });
-        });
-
-        el.addEventListener('raycaster-intersection-cleared', function(event) {
-          // Retirer le composant 'trigger-move' lorsque le rayon ne rencontre plus d'objet
-          event.detail.els.forEach(function(intersectedEl) {
-            intersectedEl.removeAttribute('trigger-move');
-          });
-        });
-      }
-    });
-  </script>
 </body>
