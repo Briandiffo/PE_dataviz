@@ -1,5 +1,5 @@
 <head>
-  <title>Example with Eight Spheres</title>
+  <title>Exemple avec Huit Sphères</title>
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.misc.min.js"></script>
   <script src="https://unpkg.com/super-hands@^3.0.3/dist/super-hands.min.js"></script>
@@ -9,12 +9,12 @@
   <a-scene>
     <a-assets></a-assets>
     <a-entity>
-      <a-camera></a-camera>
+      <a-camera position="0 1.6 0" movement-controls></a-camera>
       <a-entity sphere-collider="objects: .interactable" super-hands hand-controls="hand: left"></a-entity>
       <a-entity sphere-collider="objects: .interactable" super-hands hand-controls="hand: right"></a-entity>
     </a-entity>
     
-    <!-- Eight draggable spheres -->
+    <!-- Huit sphères déplaçables -->
     <a-sphere class="interactable" hoverable grabbable stretchable draggable droppable color="blue" position="-2 1 -4"></a-sphere>
     <a-sphere class="interactable" hoverable grabbable stretchable draggable droppable color="red" position="0 1 -4"></a-sphere>
     <a-sphere class="interactable" hoverable grabbable stretchable draggable droppable color="green" position="2 1 -4"></a-sphere>
