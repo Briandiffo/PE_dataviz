@@ -2,9 +2,9 @@
 <html>
   <head>
     <title>A-Frame Example</title>
-    <script src="https://aframe.io/releases/0.7.1/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-event-set-component@3.0.3/dist/aframe-event-set-component.min.js"></script>
-    <script src="https://unpkg.com/super-hands@^2.1.0/dist/super-hands.min.js"></script>
+    <script src="https://unpkg.com/super-hands@^3.0.0/dist/super-hands.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.misc.min.js"></script>
     <style>
       a-scene {
@@ -15,7 +15,7 @@
   </head>
   <body>
     <a-scene>
-      <a-entity progressive-controls></a-entity>
+      <a-entity progressive-controls="objects: .raycastable"></a-entity>
       
       <a-box position="-1.5 0 -7" color="#4CC3D9" class="raycastable" clickable
              event-set__enter="_event: grab-start; _target: #green; material.color: #4CC3D9"
